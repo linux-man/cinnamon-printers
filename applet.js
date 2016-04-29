@@ -60,7 +60,7 @@ MyApplet.prototype = {
   },
 
   on_cancel_all_jobs_clicked: function() {
-    for(var n = 0; n < this.printers.length - 1; n++) {
+    for(var n = 0; n < this.printers.length; n++) {
       Util.spawn(['cancel', '-a', this.printers[n]]);
     }
   },
