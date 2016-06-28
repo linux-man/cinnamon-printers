@@ -155,8 +155,8 @@ MyApplet.prototype = {
           let job = line.slice(-1)[0];
           let printer = line.slice(0, -1).join("-");
           let doc = out2[out2.indexOf(job) + 1];
-          for(var m = out2.indexOf(job) + 2; m < out2.length; m++) {
-            if(isNaN(out2[m])) doc = doc + " " + out2[m];
+          for(var m = out2.indexOf(job) + 2; m < out2.length - 1; m++) {
+            if(isNaN(out2[m]) || out2[m + 1] != "bytes") doc = doc + " " + out2[m];
             else break;
           }
           if(doc.length > 30) doc = doc + "...";
@@ -196,10 +196,31 @@ function main(metadata, orientation, panel_height, instance_id) {
   return myApplet;
 }
 
-function bin2string(array){
-  var result = "";
-  for(var i = 0; i < array.length; ++i){
-    result+= (String.fromCharCode(array[i]));
+function bin2string(array) {
+  var out, i, len, c;
+  var char2, char3;
+  out = "";
+  len = array.length;
+  i = 0;
+  while(i < len) {
+    c = array[i++];
+    switch(c >> 4) {
+      case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+        // 0xxxxxxx
+        out += String.fromCharCode(c);
+        break;
+      case 12: case 13:
+        // 110x xxxx   10xx xxxx
+        char2 = array[i++];
+        out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
+        break;
+      case 14:
+        // 1110 xxxx  10xx xxxx  10xx xxxx
+        char2 = array[i++];
+        char3 = array[i++];
+        out += String.fromCharCode(((c & 0x0F) << 12) | ((char2 & 0x3F) << 6) | ((char3 & 0x3F) << 0));
+        break;
+    }
   }
-  return result;
+  return out;
 }
