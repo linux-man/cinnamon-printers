@@ -20,11 +20,11 @@ msgstr ""
 
 #: ../settings-schema.json:5
 msgid "Always show icon"
-msgstr "Mostrar sempre o ícon"
+msgstr "Mostrar sempre o ícone"
 
 #: ../settings-schema.json:6
 msgid "Icon is always visible or only when printing"
-msgstr "Ícon é sempre visível ou só durante a impressão"
+msgstr "O ícone é sempre visível ou só durante a impressão"
 
 #: ../settings-schema.json:11
 msgid "Printer errors"
@@ -40,7 +40,7 @@ msgstr "Contagem de documentos"
 
 #: ../settings-schema.json:18
 msgid "Show documents count next to icon"
-msgstr "Mostra a contagem de documentos ao lado do ícon"
+msgstr "Mostra a contagem de documentos ao lado do ícone"
 
 #: ../settings-schema.json:23
 msgid "Document number"
