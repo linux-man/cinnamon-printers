@@ -4,6 +4,6 @@
  "contributors": "Caldas Lopes",
  "name": "Printers",
  "description": "Manage Jobs and Printers",
- "version": "0.3",
+ "version": "0.4",
  "icon": "printer"
 }

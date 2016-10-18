@@ -91,18 +91,20 @@ MyApplet.prototype = {
   },
 
   update: function() {
-    var [res, out] = GLib.spawn_sync(null, ['/usr/bin/lpstat', '-l'], null, 0, null);
-    out = bin2string(out);
-    this.printError = out.indexOf("Unable") >= 0 || out.indexOf(" not ") >= 0;
-    [res, out] = GLib.spawn_sync(null, ['/usr/bin/lpstat', '-o'], null, 0, null);
-    out = bin2string(out).split(/\n/);
-    this.update_icon();
-    if(this.jobCount != out.length - 1) this.show_warning_icon();
-    this.jobCount = out.length - 1
-    if(this.jobCount > 0 && this.show_jobs) this.set_applet_label(this.jobCount.toString());
-    else this.set_applet_label("");
-    this._applet_icon_box.visible = this.always_show_icon || this.jobCount > 0;
     Mainloop.timeout_add_seconds(this.interval, Lang.bind(this, this.update));
+    Util.spawn_async(['/usr/bin/lpstat', '-l'], Lang.bind(this, function(command) {
+      var out = command;
+      this.printError = out.indexOf("Unable") >= 0 || out.indexOf(" not ") >= 0;
+	    Util.spawn_async(['/usr/bin/lpstat', '-o'], Lang.bind(this, function(command){
+        out = command.split(/\n/);
+        this.update_icon();
+        if(this.jobCount != out.length - 1) this.show_warning_icon();
+        this.jobCount = out.length - 1
+        if(this.jobCount > 0 && this.show_jobs) this.set_applet_label(this.jobCount.toString());
+        else this.set_applet_label("");
+        this._applet_icon_box.visible = this.always_show_icon || this.jobCount > 0;
+      }))
+	  }))
   },
 
   on_settings_changed: function() {
@@ -120,70 +122,79 @@ MyApplet.prototype = {
       this.menu.addMenuItem(printers);
       this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem);
 //Add Printers
-      var [res, out] = GLib.spawn_sync(null, ['/usr/bin/lpstat', '-a'], null, 0, null);
-      out = bin2string(out);
-      this.printers = [];
-      if(out.length > 0) {
-        var [res2, out2] = GLib.spawn_sync(null, ['/usr/bin/lpstat', '-d'], null, 0, null);//To check default printer
-        out2 = bin2string(out2);
-        out = out.split("\n");
-        for(var n = 0; n < out.length - 1; n++) {
-          let printer = out[n].split(" ")[0];
-          this.printers.push(printer);
-          let printerItem = new PopupMenu.PopupIconMenuItem(printer, "emblem-documents", this.icontype);
-          if(out2.indexOf(printer) >= 0) printerItem.addActor(new St.Icon({ style_class: 'popup-menu-icon',icon_name: 'emblem-default', icon_type: this.icontype }));
-          printerItem.connect('activate', Lang.bind(printerItem, this.on_show_jobs_clicked));
-          this.menu.addMenuItem(printerItem);
-        }
-      }
-      this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem);
+      Util.spawn_async(['/usr/bin/lpstat', '-a'], Lang.bind(this, function(command) {
+        var out = command;
+        this.printers = [];
+        if(out.length > 0) {
+          Util.spawn_async(['/usr/bin/lpstat', '-d'], Lang.bind(this, function(command) {//To check default printer
+            var out2 = command;
+            out = out.split("\n");
+            for(var n = 0; n < out.length - 1; n++) {
+              let printer = out[n].split(" ")[0];
+              this.printers.push(printer);
+              let printerItem = new PopupMenu.PopupIconMenuItem(printer, "emblem-documents", this.icontype);
+              if(out2.indexOf(printer) >= 0) printerItem.addActor(new St.Icon({ style_class: 'popup-menu-icon',icon_name: 'emblem-default', icon_type: this.icontype }));
+              printerItem.connect('activate', Lang.bind(printerItem, this.on_show_jobs_clicked));
+              this.menu.addMenuItem(printerItem);
+            }
+            this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem);
 //Add Jobs
-      [res, out] = GLib.spawn_sync(null, ['/usr/bin/lpstat', '-o'], null, 0, null);
-      out = bin2string(out);
-      if(out.length > 0) {//If there are jobs
+            Util.spawn_async(['/usr/bin/lpstat', '-o'], Lang.bind(this, function(command) {
+              out = command;
+              if(out.length > 0) {//If there are jobs
 //Cancel all item
-        let cancelItem = new PopupMenu.PopupIconMenuItem(_("Cancel all jobs"), "edit-delete", this.icontype);
-        cancelItem.connect('activate', Lang.bind(this, this.on_cancel_all_jobs_clicked));
-        this.menu.addMenuItem(cancelItem);
+                let cancelItem = new PopupMenu.PopupIconMenuItem(_("Cancel all jobs"), "edit-delete", this.icontype);
+                cancelItem.connect('activate', Lang.bind(this, this.on_cancel_all_jobs_clicked));
+                this.menu.addMenuItem(cancelItem);
 //Cancel job
-        out = out.split(/\n/);
-        var [res2, out2] = GLib.spawn_sync(null, ['/usr/bin/lpq', '-a'], null, 0, null);//To get document name
-        out2 = bin2string(out2).replace(/\n/g, " ").split(/\s+/);
-        let sendJobs = [];
-        for(var n = 0; n < out.length - 1; n++) {
-          let line = out[n].split(" ")[0].split("-");
-          let job = line.slice(-1)[0];
-          let printer = line.slice(0, -1).join("-");
-          let doc = out2[out2.indexOf(job) + 1];
-          for(var m = out2.indexOf(job) + 2; m < out2.length - 1; m++) {
-            if(isNaN(out2[m]) || out2[m + 1] != "bytes") doc = doc + " " + out2[m];
-            else break;
-          }
-          if(doc.length > 30) doc = doc + "...";
-          let text = doc;
-          if(this.job_number) text += " (" + job + ")";
-          text += " " + _("at") + " " + printer;
-          let jobItem = new PopupMenu.PopupIconMenuItem(text, "edit-delete", this.icontype);
-          if(out2[out2.indexOf(job) - 2] == "active") jobItem.addActor(new St.Icon({ style_class: 'popup-menu-icon',icon_name: 'emblem-default', icon_type: this.icontype }));
-          jobItem.job = job;
-          jobItem.connect('activate', Lang.bind(jobItem, this.on_cancel_job_clicked));
-          this.menu.addMenuItem(jobItem);
-          if(this.send_to_front && out2[out2.indexOf(job) - 2] != "active" && out2[out2.indexOf(job) - 2] != "1st") {
-            sendJobs.push(new PopupMenu.PopupIconMenuItem(text, "go-up", this.icontype));
-            sendJobs[sendJobs.length - 1].job = job;
-            sendJobs[sendJobs.length - 1].connect('activate', Lang.bind(sendJobs[sendJobs.length - 1], this.on_send_to_front_clicked));
-          }
+                out = out.split(/\n/);
+                Util.spawn_async(['/usr/bin/lpq', '-a'], Lang.bind(this, function(command) {
+                  out2 = command.replace(/\n/g, " ").split(/\s+/);
+                  let sendJobs = [];
+                  for(var n = 0; n < out.length - 1; n++) {
+                    let line = out[n].split(" ")[0].split("-");
+                    let job = line.slice(-1)[0];
+                    let printer = line.slice(0, -1).join("-");
+                    let doc = out2[out2.indexOf(job) + 1];
+                    for(var m = out2.indexOf(job) + 2; m < out2.length - 1; m++) {
+                      if(isNaN(out2[m]) || out2[m + 1] != "bytes") doc = doc + " " + out2[m];
+                      else break;
+                    }
+                    if(doc.length > 30) doc = doc + "...";
+                    let text = doc;
+                    if(this.job_number) text += " (" + job + ")";
+                    text += " " + _("at") + " " + printer;
+                    let jobItem = new PopupMenu.PopupIconMenuItem(text, "edit-delete", this.icontype);
+                    if(out2[out2.indexOf(job) - 2] == "active") jobItem.addActor(new St.Icon({ style_class: 'popup-menu-icon',icon_name: 'emblem-default', icon_type: this.icontype }));
+                    jobItem.job = job;
+                    jobItem.connect('activate', Lang.bind(jobItem, this.on_cancel_job_clicked));
+                    this.menu.addMenuItem(jobItem);
+                    if(this.send_to_front && out2[out2.indexOf(job) - 2] != "active" && out2[out2.indexOf(job) - 2] != "1st") {
+                      sendJobs.push(new PopupMenu.PopupIconMenuItem(text, "go-up", this.icontype));
+                      sendJobs[sendJobs.length - 1].job = job;
+                      sendJobs[sendJobs.length - 1].connect('activate', Lang.bind(sendJobs[sendJobs.length - 1], this.on_send_to_front_clicked));
+                    }
+                  }
+//Send to front
+                  if(this.send_to_front && sendJobs.length > 0) {
+                    let subMenu = new PopupMenu.PopupSubMenuMenuItem(_("Send to front"));
+                    for(var n = 0; n < sendJobs.length; n++) {
+                      subMenu.menu.addMenuItem(sendJobs[n]);
+                    }
+                    this.menu.addMenuItem(subMenu);
+                    this.menu.toggle();
+                  }
+                  else this.menu.toggle();
+                }))
+              }
+              else this.menu.toggle();
+            }))
+          }))
         }
-        if(this.send_to_front && sendJobs.length > 0) {
-          let subMenu = new PopupMenu.PopupSubMenuMenuItem(_("Send to front"));
-          for(var n = 0; n < sendJobs.length; n++) {
-            subMenu.menu.addMenuItem(sendJobs[n]);
-          }
-          this.menu.addMenuItem(subMenu);
-        }
-      }
+        else this.menu.toggle();
+      }))
     }
-    this.menu.toggle();
+    else this.menu.toggle();
   },
 
   on_applet_removed_from_panel: function() {
@@ -194,33 +205,4 @@ MyApplet.prototype = {
 function main(metadata, orientation, panel_height, instance_id) {
   let myApplet = new MyApplet(metadata, orientation, panel_height, instance_id);
   return myApplet;
-}
-
-function bin2string(array) {
-  var out, i, len, c;
-  var char2, char3;
-  out = "";
-  len = array.length;
-  i = 0;
-  while(i < len) {
-    c = array[i++];
-    switch(c >> 4) {
-      case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
-        // 0xxxxxxx
-        out += String.fromCharCode(c);
-        break;
-      case 12: case 13:
-        // 110x xxxx   10xx xxxx
-        char2 = array[i++];
-        out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
-        break;
-      case 14:
-        // 1110 xxxx  10xx xxxx  10xx xxxx
-        char2 = array[i++];
-        char3 = array[i++];
-        out += String.fromCharCode(((c & 0x0F) << 12) | ((char2 & 0x3F) << 6) | ((char3 & 0x3F) << 0));
-        break;
-    }
-  }
-  return out;
 }
