@@ -28,6 +28,8 @@ MyApplet.prototype = {
   _init: function(orientation, panel_height, instance_id) {
     Applet.TextIconApplet.prototype._init.call(this, orientation, panel_height, instance_id);
 
+    if(this.setAllowedLayout) this.setAllowedLayout(Applet.AllowedLayout.BOTH);
+
     this.set_applet_tooltip(_("Printers"));
 
     this.menuManager = new PopupMenu.PopupMenuManager(this);
@@ -95,16 +97,16 @@ MyApplet.prototype = {
     Util.spawn_async(['/usr/bin/lpstat', '-l'], Lang.bind(this, function(command) {
       var out = command;
       this.printError = out.indexOf("Unable") >= 0 || out.indexOf(" not ") >= 0;
-	    Util.spawn_async(['/usr/bin/lpstat', '-o'], Lang.bind(this, function(command){
+      Util.spawn_async(['/usr/bin/lpstat', '-o'], Lang.bind(this, function(command){
         out = command.split(/\n/);
         this.update_icon();
         if(this.jobCount != out.length - 1) this.show_warning_icon();
         this.jobCount = out.length - 1
         if(this.jobCount > 0 && this.show_jobs) this.set_applet_label(this.jobCount.toString());
         else this.set_applet_label("");
-        this._applet_icon_box.visible = this.always_show_icon || this.jobCount > 0;
+        this.set_applet_enabled(this.always_show_icon || this.jobCount > 0);
       }))
-	  }))
+    }))
   },
 
   on_settings_changed: function() {
