@@ -88,4 +88,4 @@ msgstr "Alle Druckaufträge abbrechen"
 
 #: ../applet.js:165
 msgid "at"
-msgstr "an"
+msgstr "auf"
