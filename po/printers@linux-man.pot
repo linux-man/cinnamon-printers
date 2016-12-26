@@ -65,18 +65,6 @@ msgstr ""
 msgid "Use symbolic icons"
 msgstr ""
 
-#: ../settings-schema.json:44
-msgid "s"
-msgstr ""
-
-#: ../settings-schema.json:45
-msgid "Interval"
-msgstr ""
-
-#: ../settings-schema.json:46
-msgid "Interval in which the applet refreshes data"
-msgstr ""
-
 #: ../applet.js:31 ../applet.js:118
 msgid "Printers"
 msgstr ""

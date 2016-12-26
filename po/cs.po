@@ -68,18 +68,6 @@ msgstr "Symbolické ikony"
 msgid "Use symbolic icons"
 msgstr "Použít symbolické ikony"
 
-#: ../settings-schema.json:44
-msgid "s"
-msgstr "s"
-
-#: ../settings-schema.json:45
-msgid "Interval"
-msgstr "Interval"
-
-#: ../settings-schema.json:46
-msgid "Interval in which the applet refreshes data"
-msgstr "Interval, v němž aplet obnovuje data"
-
 #: ../applet.js:31 ../applet.js:118
 msgid "Printers"
 msgstr "Tiskárny"

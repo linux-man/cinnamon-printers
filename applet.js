@@ -1,5 +1,6 @@
 const Applet = imports.ui.applet;
 const Lang = imports.lang;
+const Gio = imports.gi.Gio;
 const PopupMenu = imports.ui.popupMenu;
 const Mainloop = imports.mainloop;
 const Settings = imports.ui.settings;
@@ -30,6 +31,8 @@ MyApplet.prototype = {
 
     if(this.setAllowedLayout) this.setAllowedLayout(Applet.AllowedLayout.BOTH);
 
+    this._cupsSignal = Gio.DBus.system.signal_subscribe(null, "org.cups.cupsd.Notifier", null, "/org/cups/cupsd/Notifier", null, Gio.DBusSignalFlags.NONE, this.cups_signal.bind(this));
+
     this.set_applet_tooltip(_("Printers"));
 
     this.menuManager = new PopupMenu.PopupMenuManager(this);
@@ -44,10 +47,10 @@ MyApplet.prototype = {
     this.settings.bindProperty(Settings.BindingDirection.IN, "job-number", "job_number", this.on_settings_changed, null);
     this.settings.bindProperty(Settings.BindingDirection.IN, "send-to-front", "send_to_front", this.on_settings_changed, null);
     this.settings.bindProperty(Settings.BindingDirection.IN, "symbolic-icons", "symbolic_icons", this.on_settings_changed, null);
-    this.settings.bindProperty(Settings.BindingDirection.IN, "interval", "interval", this.on_settings_changed, null);
 
     this.jobCount = 0;
     this.printError = false;
+    this.printWarning = false;
     this.printers = [];
     this.on_settings_changed();
     this.update();
@@ -75,14 +78,19 @@ MyApplet.prototype = {
     Util.spawn(['lp', '-i', item.job, '-q 100']);
   },
 
-  show_warning_icon: function () {
-    if (this.symbolic_icons) this.set_applet_icon_symbolic_name("printer-warning");
-    else this.set_applet_icon_name("printer-warning");
-    Mainloop.timeout_add_seconds(3, Lang.bind(this, this.update_icon));
+  cups_signal: function () {
+    this.printWarning = true;
+    Mainloop.timeout_add_seconds(3, Lang.bind(this, function(){this.printWarning = false; this.update()}));
+    if(!this.menu.isOpen) this.menu.removeAll();
+    this.update();
   },
 
   update_icon: function() {
-    if(this.show_error && this.printError) {
+    if(this.printWarning) {
+      if (this.symbolic_icons) this.set_applet_icon_symbolic_name("printer-warning");
+      else this.set_applet_icon_name("printer-warning");
+    }
+    else if(this.show_error && this.printError) {
       if (this.symbolic_icons) this.set_applet_icon_symbolic_name("printer-error");
       else this.set_applet_icon_name("printer-error");
     }
@@ -93,14 +101,12 @@ MyApplet.prototype = {
   },
 
   update: function() {
-    Mainloop.timeout_add_seconds(this.interval, Lang.bind(this, this.update));
     Util.spawn_async(['/usr/bin/lpstat', '-l'], Lang.bind(this, function(command) {
       var out = command;
       this.printError = out.indexOf("Unable") >= 0 || out.indexOf(" not ") >= 0;
+      this.update_icon();
       Util.spawn_async(['/usr/bin/lpstat', '-o'], Lang.bind(this, function(command){
         out = command.split(/\n/);
-        this.update_icon();
-        if(this.jobCount != out.length - 1) this.show_warning_icon();
         this.jobCount = out.length - 1
         if(this.jobCount > 0 && this.show_jobs) this.set_applet_label(this.jobCount.toString());
         else this.set_applet_label("");
@@ -113,10 +119,11 @@ MyApplet.prototype = {
     if (this.symbolic_icons) this.icontype = St.IconType.SYMBOLIC;
     else this.icontype = St.IconType.FULLCOLOR;
     this.printError = false;
-    this.update_icon();
+    this.update();
   },
 
   on_applet_clicked: function(event) {
+    this.update();
     if(!this.menu.isOpen) {
       this.menu.removeAll();
       let printers = new PopupMenu.PopupIconMenuItem(_("Printers"), "printer-printing", this.icontype);
@@ -144,11 +151,11 @@ MyApplet.prototype = {
             Util.spawn_async(['/usr/bin/lpstat', '-o'], Lang.bind(this, function(command) {
               out = command;
               if(out.length > 0) {//If there are jobs
-//Cancel all item
+//Cancel all Jobs
                 let cancelItem = new PopupMenu.PopupIconMenuItem(_("Cancel all jobs"), "edit-delete", this.icontype);
                 cancelItem.connect('activate', Lang.bind(this, this.on_cancel_all_jobs_clicked));
                 this.menu.addMenuItem(cancelItem);
-//Cancel job
+//Cancel Job
                 out = out.split(/\n/);
                 Util.spawn_async(['/usr/bin/lpq', '-a'], Lang.bind(this, function(command) {
                   out2 = command.replace(/\n/g, " ").split(/\s+/);
@@ -177,7 +184,7 @@ MyApplet.prototype = {
                       sendJobs[sendJobs.length - 1].connect('activate', Lang.bind(sendJobs[sendJobs.length - 1], this.on_send_to_front_clicked));
                     }
                   }
-//Send to front
+//Send to Front
                   if(this.send_to_front && sendJobs.length > 0) {
                     let subMenu = new PopupMenu.PopupSubMenuMenuItem(_("Send to front"));
                     for(var n = 0; n < sendJobs.length; n++) {
@@ -196,7 +203,10 @@ MyApplet.prototype = {
         else this.menu.toggle();
       }))
     }
-    else this.menu.toggle();
+    else {
+      this.menu.toggle();
+      Mainloop.timeout_add_seconds(1, Lang.bind(this, function(){if(!this.menu.isOpen) this.menu.removeAll();}));
+    }
   },
 
   on_applet_removed_from_panel: function() {

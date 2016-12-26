@@ -66,18 +66,6 @@ msgstr "Ícones simbólicos"
 msgid "Use symbolic icons"
 msgstr "Usar ícones simbólicos"
 
-#: ../settings-schema.json:44
-msgid "s"
-msgstr "s"
-
-#: ../settings-schema.json:45
-msgid "Interval"
-msgstr "Intervalo"
-
-#: ../settings-schema.json:46
-msgid "Interval in which the applet refreshes data"
-msgstr "Intervalo de refrescamento do applet"
-
 #: ../applet.js:31 ../applet.js:118
 msgid "Printers"
 msgstr "Impressoras"

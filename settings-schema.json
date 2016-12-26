@@ -34,15 +34,5 @@
     "default" : true,
     "description": "Symbolic icons",
     "tooltip": "Use symbolic icons"
- },
- "interval": {
-    "type": "spinbutton",
-    "default": 5,
-    "min": 1,
-    "max": 30,
-    "step": 1,
-    "units": "s",
-    "description": "Interval",
-    "tooltip": "Interval in which the applet refreshes data"
  }
 }

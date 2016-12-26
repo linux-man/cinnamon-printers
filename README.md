@@ -8,6 +8,9 @@ German translation by NikoKrause(<https://github.com/NikoKrause>)
 
 ###Changelog
 
+###0.6
+    Get rid of the loop - applet refreshes when clicked or receive a Cups signal
+
 ###0.5
     Compatibility with Cinnamon 3.2
     Vertical panels (setAllowedLayout)
