@@ -76,3 +76,7 @@ msgstr ""
 #: ../applet.js:165
 msgid "at"
 msgstr ""
+
+#. printers@linux-man->metadata.json->description
+msgid "Manage Jobs and Printers"
+msgstr ""

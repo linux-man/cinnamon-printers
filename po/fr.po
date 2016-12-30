@@ -76,3 +76,7 @@ msgstr "Annuler tout travail"
 #: ../applet.js:165
 msgid "at"
 msgstr "à"
+
+#. printers@linux-man->metadata.json->description
+msgid "Manage Jobs and Printers"
+msgstr "Gérer les travaux et imprimantes"

@@ -76,3 +76,7 @@ msgstr "Cancelar todas las impresiones"
 #: ../applet.js:165
 msgid "at"
 msgstr "en"
+
+#. printers@linux-man->metadata.json->description
+msgid "Manage Jobs and Printers"
+msgstr "Administración de Impresiones e Impresoras"

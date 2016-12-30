@@ -8,6 +8,7 @@ const St = imports.gi.St;
 const GLib = imports.gi.GLib;
 const Util = imports.misc.util;
 const Gettext = imports.gettext;
+const APPLET_PATH = imports.ui.appletManager.appletMeta["printers@linux-man"].path;
 
 Gettext.bindtextdomain('printers@linux-man', GLib.get_home_dir() + '/.local/share/locale');
 
@@ -130,76 +131,74 @@ MyApplet.prototype = {
       this.menu.addMenuItem(printers);
       this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem);
 //Add Printers
-      Util.spawn_async(['/usr/bin/lpstat', '-d'], Lang.bind(this, function(command) {//Search default printer
-        var out2 = command;
+      Util.spawn_async(['python', APPLET_PATH + '/lpstat-a.py'], Lang.bind(this, function(command) {
+        var out = command;
         this.printers = [];
-        if(out2.substring(0, 2) != 'no') {
-          Util.spawn_async(['/usr/bin/lpstat', '-a'], Lang.bind(this, function(command) {//Search printers
-            var out = command;
-            out = out.split('\n');
-            for(var n = 0; n < out.length - 1; n++) {
-              let printer = out[n].split(' ')[0];
-              this.printers.push(printer);
-              let printerItem = new PopupMenu.PopupIconMenuItem(printer, 'emblem-documents', this.icontype);
-              if(out2.indexOf(printer) >= 0) printerItem.addActor(new St.Icon({ style_class: 'popup-menu-icon',icon_name: 'emblem-default', icon_type: this.icontype }));
-              printerItem.connect('activate', Lang.bind(printerItem, this.on_show_jobs_clicked));
-              this.menu.addMenuItem(printerItem);
-            }
-            this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem);
+        Util.spawn_async(['/usr/bin/lpstat', '-d'], Lang.bind(this, function(command) {//To check default printer
+          if(command.substring(0, 2) != 'no') var out2 = command.split(': ')[1].trim();
+		  else var out2 = 'no default';
+          out = out.split('\n');
+          for(var n = 0; n < out.length - 2; n++) {
+            let printer = out[n].split(' ')[0].trim();
+            this.printers.push(printer);
+            let printerItem = new PopupMenu.PopupIconMenuItem(printer, 'emblem-documents', this.icontype);
+            if(out2.toString() == printer.toString()) printerItem.addActor(new St.Icon({ style_class: 'popup-menu-icon',icon_name: 'emblem-default', icon_type: this.icontype }));
+            printerItem.connect('activate', Lang.bind(printerItem, this.on_show_jobs_clicked));
+            this.menu.addMenuItem(printerItem);
+          }
+          this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem);
 //Add Jobs
-            Util.spawn_async(['/usr/bin/lpstat', '-o'], Lang.bind(this, function(command) {
-              out = command;
-              if(out.length > 0) {//If there are jobs
+          Util.spawn_async(['/usr/bin/lpstat', '-o'], Lang.bind(this, function(command) {
+            out = command;
+            if(out.length > 0) {//If there are jobs
 //Cancel all Jobs
-                let cancelItem = new PopupMenu.PopupIconMenuItem(_('Cancel all jobs'), 'edit-delete', this.icontype);
-                cancelItem.connect('activate', Lang.bind(this, this.on_cancel_all_jobs_clicked));
-                this.menu.addMenuItem(cancelItem);
+              let cancelItem = new PopupMenu.PopupIconMenuItem(_('Cancel all jobs'), 'edit-delete', this.icontype);
+              cancelItem.connect('activate', Lang.bind(this, this.on_cancel_all_jobs_clicked));
+              this.menu.addMenuItem(cancelItem);
 //Cancel Job
-                out = out.split(/\n/);
-                Util.spawn_async(['/usr/bin/lpq', '-a'], Lang.bind(this, function(command) {
-                  out2 = command.replace(/\n/g, ' ').split(/\s+/);
-                  let sendJobs = [];
-                  for(var n = 0; n < out.length - 1; n++) {
-                    let line = out[n].split(' ')[0].split('-');
-                    let job = line.slice(-1)[0];
-                    let printer = line.slice(0, -1).join('-');
-                    let doc = out2[out2.indexOf(job) + 1];
-                    for(var m = out2.indexOf(job) + 2; m < out2.length - 1; m++) {
-                      if(isNaN(out2[m]) || out2[m + 1] != 'bytes') doc = doc + ' ' + out2[m];
-                      else break;
-                    }
-                    if(doc.length > 30) doc = doc + '...';
-                    let text = doc;
-                    if(this.job_number) text += ' (' + job + ')';
-                    text += ' ' + _('at') + ' ' + printer;
-                    let jobItem = new PopupMenu.PopupIconMenuItem(text, 'edit-delete', this.icontype);
-                    if(out2[out2.indexOf(job) - 2] == 'active') jobItem.addActor(new St.Icon({ style_class: 'popup-menu-icon',icon_name: 'emblem-default', icon_type: this.icontype }));
-                    jobItem.job = job;
-                    jobItem.connect('activate', Lang.bind(jobItem, this.on_cancel_job_clicked));
-                    this.menu.addMenuItem(jobItem);
-                    if(this.send_to_front && out2[out2.indexOf(job) - 2] != 'active' && out2[out2.indexOf(job) - 2] != '1st') {
-                      sendJobs.push(new PopupMenu.PopupIconMenuItem(text, 'go-up', this.icontype));
-                      sendJobs[sendJobs.length - 1].job = job;
-                      sendJobs[sendJobs.length - 1].connect('activate', Lang.bind(sendJobs[sendJobs.length - 1], this.on_send_to_front_clicked));
-                    }
+              out = out.split(/\n/);
+              Util.spawn_async(['/usr/bin/lpq', '-a'], Lang.bind(this, function(command) {
+                out2 = command.replace(/\n/g, ' ').split(/\s+/);
+                let sendJobs = [];
+                for(var n = 0; n < out.length - 1; n++) {
+                  let line = out[n].split(' ')[0].split('-');
+                  let job = line.slice(-1)[0];
+                  let printer = line.slice(0, -1).join('-');
+                  let doc = out2[out2.indexOf(job) + 1];
+                  for(var m = out2.indexOf(job) + 2; m < out2.length - 1; m++) {
+                    if(isNaN(out2[m]) || out2[m + 1] != 'bytes') doc = doc + ' ' + out2[m];
+                    else break;
                   }
+                  if(doc.length > 30) doc = doc + '...';
+                  let text = doc;
+                  if(this.job_number) text += ' (' + job + ')';
+                  text += ' ' + _('at') + ' ' + printer;
+                  let jobItem = new PopupMenu.PopupIconMenuItem(text, 'edit-delete', this.icontype);
+                  if(out2[out2.indexOf(job) - 2] == 'active') jobItem.addActor(new St.Icon({ style_class: 'popup-menu-icon',icon_name: 'emblem-default', icon_type: this.icontype }));
+                  jobItem.job = job;
+                  jobItem.connect('activate', Lang.bind(jobItem, this.on_cancel_job_clicked));
+                  this.menu.addMenuItem(jobItem);
+                  if(this.send_to_front && out2[out2.indexOf(job) - 2] != 'active' && out2[out2.indexOf(job) - 2] != '1st') {
+                    sendJobs.push(new PopupMenu.PopupIconMenuItem(text, 'go-up', this.icontype));
+                    sendJobs[sendJobs.length - 1].job = job;
+                    sendJobs[sendJobs.length - 1].connect('activate', Lang.bind(sendJobs[sendJobs.length - 1], this.on_send_to_front_clicked));
+                  }
+                }
 //Send to Front
-                  if(this.send_to_front && sendJobs.length > 0) {
-                    let subMenu = new PopupMenu.PopupSubMenuMenuItem(_('Send to front'));
-                    for(var n = 0; n < sendJobs.length; n++) {
-                      subMenu.menu.addMenuItem(sendJobs[n]);
-                    }
-                    this.menu.addMenuItem(subMenu);
-                    this.menu.toggle();
+                if(this.send_to_front && sendJobs.length > 0) {
+                  let subMenu = new PopupMenu.PopupSubMenuMenuItem(_('Send to front'));
+                  for(var n = 0; n < sendJobs.length; n++) {
+                    subMenu.menu.addMenuItem(sendJobs[n]);
                   }
-                  else this.menu.toggle();
-                }))
-              }
-              else this.menu.toggle();
-            }))
+                  this.menu.addMenuItem(subMenu);
+                  this.menu.toggle();
+                }
+                else this.menu.toggle();
+              }))
+            }
+            else this.menu.toggle();
           }))
-        }
-        else this.menu.toggle();
+        }))
       }))
     }
     else this.menu.toggle();
