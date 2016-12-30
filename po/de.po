@@ -77,3 +77,7 @@ msgstr "Alle Druckaufträge abbrechen"
 #: ../applet.js:165
 msgid "at"
 msgstr "auf"
+
+#. printers@linux-man->metadata.json->description
+msgid "Manage Jobs and Printers"
+msgstr "Druckaufträge und Drucker verwalten"
