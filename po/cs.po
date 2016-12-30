@@ -52,7 +52,7 @@ msgstr "Číslo dokumentu"
 msgid "Show each document number on print list"
 msgstr "Zobrazovat číslo dokumentu na seznamu tisku"
 
-#: ../settings-schema.json:29 ../applet.js:178
+#: ../settings-schema.json:29 ../applet.js:189
 msgid "Send to front"
 msgstr "Odeslat do tiskové fronty"
 
@@ -68,15 +68,14 @@ msgstr "Symbolické ikony"
 msgid "Use symbolic icons"
 msgstr "Použít symbolické ikony"
 
-#: ../applet.js:31 ../applet.js:118
+#: ../applet.js:37 ../applet.js:129
 msgid "Printers"
 msgstr "Tiskárny"
 
-#: ../applet.js:145
+#: ../applet.js:155
 msgid "Cancel all jobs"
 msgstr "Zrušit všechny úlohy"
 
-#: ../applet.js:165
+#: ../applet.js:175
 msgid "at"
 msgstr "na"
-
