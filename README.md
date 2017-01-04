@@ -8,6 +8,11 @@ German translation by NikoKrause(<https://github.com/NikoKrause>)
 
 ###Changelog
 
+###0.7
+    Applet only updates when receives a Cups signal - faster Menu toggle
+    More error conditions
+    Code cleanup
+
 ###0.6
     Get rid of the loop - applet refreshes when clicked or receive a Cups signal
 

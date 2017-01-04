@@ -49,7 +49,7 @@ msgstr ""
 msgid "Show each document number on print list"
 msgstr ""
 
-#: ../settings-schema.json:29 ../applet.js:189
+#: ../settings-schema.json:29 ../applet.js:209
 msgid "Send to front"
 msgstr ""
 
@@ -65,15 +65,15 @@ msgstr ""
 msgid "Use symbolic icons"
 msgstr ""
 
-#: ../applet.js:37 ../applet.js:129
+#: ../applet.js:37 ../applet.js:151
 msgid "Printers"
 msgstr ""
 
-#: ../applet.js:155
+#: ../applet.js:175
 msgid "Cancel all jobs"
 msgstr ""
 
-#: ../applet.js:175
+#: ../applet.js:195
 msgid "at"
 msgstr ""
 
