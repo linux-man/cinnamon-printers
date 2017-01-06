@@ -67,7 +67,8 @@ MyApplet.prototype = {
     this.settings.finalize();
   },
 
-  onCupsSignal: function () {
+  onCupsSignal: function (conn, sender, path, iface, signal) {
+    if(this.printWarning) return;
     this.printWarning = true;
     Mainloop.timeout_add_seconds(3, Lang.bind(this, this.warningTimeout));
     this.update();
@@ -79,7 +80,7 @@ MyApplet.prototype = {
   },
 
   onMenuToggled: function() {
-    if(!this.menu.isOpen && this.outdated) this.update();
+    if(!this.menu.isOpen && this.outdated) this.updateMenu();
   },
 
   onSettingsChanged: function() {
@@ -110,6 +111,11 @@ MyApplet.prototype = {
     Util.spawn(['lp', '-i', item.job, '-q 100']);
   },
 
+  update: function() {
+	this.updateIcon();
+	this.updateMenu();
+  },
+
   updateIcon: function() {
     Util.spawn_async(['/usr/bin/lpstat', '-l'], Lang.bind(this, function(out) {
       this.printError = out.indexOf('Unable') >= 0 || out.indexOf(' not ') >= 0 || out.indexOf(' failed') >= 0;
@@ -138,8 +144,7 @@ MyApplet.prototype = {
     }));
   },
 
-  update: function() {
-	this.updateIcon();
+  updateMenu: function() {
     if(this.updating) return;
     if(this.menu.isOpen) {
       this.outdated = true;
