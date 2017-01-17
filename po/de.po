@@ -20,7 +20,7 @@ msgstr ""
 
 #: ../settings-schema.json:5
 msgid "Show icon"
-msgstr "Zeigen Symbol"
+msgstr "Symbol anzeigen"
 
 #: ../settings-schema.json:6
 msgid "Always"
