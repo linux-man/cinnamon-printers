@@ -29,15 +29,15 @@ msgstr "Vždy"
 
 #: ../settings-schema.json:6
 msgid "When printers exist"
-msgstr "Pokud existují tiskárny"
+msgstr "Pokud existuje tiskárna"
 
 #: ../settings-schema.json:6
 msgid "When printing"
-msgstr "Pouze při tisku"
+msgstr "Při tisku"
 
 #: ../settings-schema.json:7
 msgid "When to show the icon"
-msgstr "Kdy zobrazit ikonu"
+msgstr "Kdy se má zobrazovat ikona"
 
 #: ../settings-schema.json:12
 msgid "Printer errors"
@@ -93,4 +93,4 @@ msgstr "na"
 
 #. printers@linux-man->metadata.json->description
 msgid "Manage Jobs and Printers"
-msgstr "Spravovat tiskové úlohy a tiskárny"
+msgstr "Správa tiskáren a tiskových úloh"
