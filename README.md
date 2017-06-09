@@ -1,10 +1,25 @@
 # cinnamon-printers
 ## printers@linux-man
+
+![Screenshot](https://raw.githubusercontent.com/linux-man/cinnamon-printers/master/screenshot.png)
+
+#### License [GPL-3+](LICENSE)
+
+## Translations
+
 Cinnamon applet - Manage Jobs and Printers
 
-Czech translation by Radek71(<https://github.com/Radek71>)
+Czech translation by [Radek71](https://github.com/Radek71)
 
-German translation by NikoKrause(<https://github.com/NikoKrause>)
+German translation by [NikoKrause](https://github.com/NikoKrause)
+
+Russian translation by [Andreevlex](https://github.com/Andreevlex)
+
+Swedish translation by [eson57](https://github.com/eson57)
+
+Chinese translation by [giwhub](https://github.com/giwhub)
+
+Croatian translation by [muzena](https://github.com/muzena)
 
 ### Changelog
 
