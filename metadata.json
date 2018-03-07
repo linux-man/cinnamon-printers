@@ -5,7 +5,7 @@
     "max-instances": "-1", 
     "dangerous": false, 
     "uuid": "printers@linux-man", 
-    "version": "0.7", 
+    "version": "0.8", 
     "icon": "printer", 
     "name": "Printers"
 }

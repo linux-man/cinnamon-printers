@@ -23,6 +23,9 @@ Croatian translation by [muzena](https://github.com/muzena)
 
 ### Changelog
 
+### 0.8
+    Applet also updates when closing menu
+
 ### 0.7
     Applet only updates when receives a Cups signal - faster Menu toggle
     3s timeout between updates
