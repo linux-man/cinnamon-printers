@@ -23,6 +23,9 @@ Croatian translation by [muzena](https://github.com/muzena)
 
 ### Changelog
 
+### 0.9
+    Configuration: "Reload Applet" and "Restart CUPS" buttons
+
 ### 0.8
     Applet also updates when closing menu
 
