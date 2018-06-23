@@ -21,6 +21,10 @@ Chinese translation by [giwhub](https://github.com/giwhub)
 
 Croatian translation by [muzena](https://github.com/muzena)
 
+French corrections by Christophe Hortemel
+
+Danish translation by [Alan01](https://github.com/Alan01)
+
 ### Changelog
 
 ### 0.9.1
