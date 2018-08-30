@@ -9,7 +9,7 @@
 
 Cinnamon applet - Manage Jobs and Printers
 
-Czech translation by [Radek71](https://github.com/Radek71)
+Czech translation by [Radek71](https://github.com/Radek71), tweaked by [p-bo](https://github.com/p-bo)
 
 German translation by [NikoKrause](https://github.com/NikoKrause)
 
