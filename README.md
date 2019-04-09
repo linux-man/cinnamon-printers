@@ -1,3 +1,4 @@
+## Starting 02/04/19, this applet is part of cinnamon ([commit](https://github.com/linuxmint/cinnamon/commit/43ed5563b6c04ffd67006cfcdcbdbe1701676c45)).
 # cinnamon-printers
 ## printers@linux-man
 
