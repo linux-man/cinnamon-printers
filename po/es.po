@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-04-26 23:33+0100\n"
-"PO-Revision-Date: 2016-04-26 23:53+0100\n"
+"PO-Revision-Date: 2021-12-26 18:56-0300\n"
 "Last-Translator: João Lopes <joao.caldas.lopes@gmail.com>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -16,6 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: ../settings-schema.json:5
 msgid "Show icon"
@@ -77,6 +78,14 @@ msgstr "Iconos simbólicos"
 msgid "Use symbolic icons"
 msgstr "Usar iconos simbólicos"
 
+#: ../settings-schema.json:43
+msgid "Reload Applet"
+msgstr "Recargar Applet"
+
+#: ../settings-schema.json:49
+msgid "Restart CUPS"
+msgstr "Reiniciar CUPS"
+
 #: ../applet.js:37 ../applet.js:131
 msgid "Printers"
 msgstr "Impresoras"
@@ -92,3 +101,4 @@ msgstr "en"
 #. printers@linux-man->metadata.json->description
 msgid "Manage Jobs and Printers"
 msgstr "Administración de Impresiones e Impresoras"
+
