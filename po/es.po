@@ -101,4 +101,3 @@ msgstr "en"
 #. printers@linux-man->metadata.json->description
 msgid "Manage Jobs and Printers"
 msgstr "Administración de Impresiones e Impresoras"
-

@@ -3,101 +3,101 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-08 21:52+0000\n"
-"PO-Revision-Date: 2023-02-09 20:50+0800\n"
-"Last-Translator: Slinet6056 <slinet6056@gmail.com>\n"
+"PO-Revision-Date: 2024-07-13 03:30+0200\n"
+"Last-Translator: Odyssey <odysseyhyd@gmail.com>\n"
 "Language-Team: \n"
-"Language: zh_CN\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: ../settings-schema.json:5
 msgid "Show icon"
-msgstr "显示图标"
+msgstr "Mostrar la icona"
 
 #: ../settings-schema.json:6
 msgid "Always"
-msgstr "始终"
+msgstr "Sempre"
 
 #: ../settings-schema.json:6
 msgid "When printers exist"
-msgstr "当打印机存在时"
+msgstr "Quan hi hagi impressores"
 
 #: ../settings-schema.json:6
 msgid "When printing"
-msgstr "当打印时"
+msgstr "Quan s'estigui imprimint"
 
 #: ../settings-schema.json:7
 msgid "When to show the icon"
-msgstr "何时显示图标"
+msgstr "Quan mostrar la icona"
 
 #: ../settings-schema.json:12
 msgid "Printer errors"
-msgstr "打印机出错"
+msgstr "Errors d'impressió"
 
 #: ../settings-schema.json:13
 msgid "Show printer error icon"
-msgstr "显示打印机出错图标"
+msgstr "Mostrar la icona d'errors d'impressió"
 
 #: ../settings-schema.json:18
 msgid "Documents count"
-msgstr "文档计数"
+msgstr "Comptador de documents"
 
 #: ../settings-schema.json:19
 msgid "Show documents count next to icon"
-msgstr "在图标旁显示文档计数"
+msgstr "Mostrar el comptador de documents al costat de la icona"
 
 #: ../settings-schema.json:24
 msgid "Document number"
-msgstr "文档编号"
+msgstr "Número de document"
 
 #: ../settings-schema.json:25
 msgid "Show each document number on print list"
-msgstr "在打印列表上显示每个文档编号"
+msgstr "Mostrar el número de cada document a la cua d'impressió"
 
 #: ../settings-schema.json:30 ../applet.js:195
 msgid "Send to front"
-msgstr "发送到前台"
+msgstr "Enviar al capdavant"
 
 #: ../settings-schema.json:31
 msgid "Documents can be sent to front"
-msgstr "文档可以发送到前台"
+msgstr "Els documents poden enviar-se al capdavant de la cua"
 
 #: ../settings-schema.json:36
 msgid "Symbolic icons"
-msgstr "符号图标"
+msgstr "Icones simbòliques"
 
 #: ../settings-schema.json:37
 msgid "Use symbolic icons"
-msgstr "使用符号图标"
+msgstr "Utilitzar icones simbòliques"
 
 #: ../settings-schema.json:43
 msgid "Reload Applet"
-msgstr "重载小程序"
+msgstr "Recarregar la miniaplicació"
 
 #: ../settings-schema.json:49
 msgid "Restart CUPS"
-msgstr "重启 CUPS"
+msgstr "Reiniciar CUPS"
 
 #: ../metadata.json:10 ../applet.js:37 ../applet.js:134
 msgid "Printers"
-msgstr "打印机"
+msgstr "Impressores"
 
 #: ../applet.js:159
 msgid "Cancel all jobs"
-msgstr "取消所有作业"
+msgstr "Cancel·lar totes les tasques"
 
 #: ../applet.js:181
 msgid "at"
-msgstr "在"
+msgstr "a"
 
 #. printers@linux-man->metadata.json->description
 msgid "Manage Jobs and Printers"
-msgstr "管理作业和打印机"
+msgstr "Gestioneu tasques i impressores"

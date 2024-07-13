@@ -28,6 +28,9 @@ Danish translation by [Alan01](https://github.com/Alan01)
 
 ### Changelog
 
+### 2.0
+    JS update, drop lang and mainloop libs, implement async/await and subprocess.
+
 ### 1.0
     Implement Scrollbars on cancel jobs list
     Wait for update to finish to display the menu
